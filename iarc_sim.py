@@ -12,7 +12,7 @@ class Robot:
     def update(self, tick_length):
         self.pos += self.velocity * tick_length
 
-def meters_to_pixels(meters):
+def m_to_px(meters):
     return int(round(meters * 20))
 
 def draw_arena_boundary(screen, color, (sx, sy), (fx, fy)):
@@ -22,21 +22,21 @@ def draw_arena_boundary(screen, color, (sx, sy), (fx, fy)):
 
 def draw_arena(screen):
     # Sidelines
-    draw_arena_boundary(screen, (255, 255, 255), (0, 0), (0, meters_to_pixels(20)))
-    draw_arena_boundary(screen, (255, 255, 255), (meters_to_pixels(20), 0), (meters_to_pixels(20), meters_to_pixels(20)))
-    draw_arena_boundary(screen, (255, 255, 255), (0, meters_to_pixels(10)), (meters_to_pixels(20), meters_to_pixels(10)))
+    draw_arena_boundary(screen, (255, 255, 255), (0, 0), (0, m_to_px(20)))
+    draw_arena_boundary(screen, (255, 255, 255), (m_to_px(20), 0), (m_to_px(20), m_to_px(20)))
+    draw_arena_boundary(screen, (255, 255, 255), (0, m_to_px(10)), (m_to_px(20), m_to_px(10)))
 
     # Top goal line
-    draw_arena_boundary(screen, (0, 255, 0), (0, 0), (meters_to_pixels(20), 0))
+    draw_arena_boundary(screen, (0, 255, 0), (0, 0), (m_to_px(20), 0))
 
     # Bottom goal line
-    draw_arena_boundary(screen, (255, 0, 0), (0, meters_to_pixels(20)), (meters_to_pixels(20), meters_to_pixels(20)))
+    draw_arena_boundary(screen, (255, 0, 0), (0, m_to_px(20)), (m_to_px(20), m_to_px(20)))
 
 def draw_robot(screen, color, (x, y)):
-    pygame.draw.circle(screen, color, (x, y), meters_to_pixels(0.33))
+    pygame.draw.circle(screen, color, (x, y), m_to_px(0.33))
 
 pygame.init()
-screen = pygame.display.set_mode((meters_to_pixels(20) + 5, meters_to_pixels(20) + 5))
+screen = pygame.display.set_mode((m_to_px(20) + 5, m_to_px(20) + 5))
 
 robots = []
 for x in range(9, 12):
@@ -57,7 +57,7 @@ while True:
     for robot in robots:
         robot.update(1.0 / 60.0)
 
-        px, py = meters_to_pixels(robot.pos[0]), meters_to_pixels(robot.pos[1])
+        px, py = m_to_px(robot.pos[0]), m_to_px(robot.pos[1])
         draw_robot(screen, (0, 0, 255), (px, py))
 
     pygame.display.flip()
