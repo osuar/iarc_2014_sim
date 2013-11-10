@@ -17,7 +17,6 @@
 #TODO IMPLEMENT MOTION PLANNING TO AVOID THE AVOIDS
 import numpy as np
 import pygame
-import math
 import sys
 from time import sleep
 
@@ -68,7 +67,7 @@ class Avoid(Robot):
     # Avoid robots move in a circle
     def update(self, tick_length):
         # Rotate by rot degrees
-        rot = math.pi / 720.0
+        rot = np.pi / 720.0
 
         # Rotate velocity vectors
         self.velocity[0] = self.velocity[0] * np.cos(rot) - self.velocity[1] * np.sin(rot)
@@ -116,8 +115,8 @@ def turn_toward_green(robot):
     while not is_toward_green(robot):
         x = robot.velocity[0]
         y = robot.velocity[1]
-        robot.velocity[0] = (x - y) / math.sqrt(2)
-        robot.velocity[1] = (x + y) / math.sqrt(2)
+        robot.velocity[0] = (x - y) / np.sqrt(2)
+        robot.velocity[1] = (x + y) / np.sqrt(2)
 
 def robot_is_hit(copter, robot):
     if(abs(copter.pos[0] - robot.pos[0]) < .1 and abs(copter.pos[1] - robot.pos[1]) < .1):
@@ -139,7 +138,7 @@ def robot_is_out(robot, score):
     return False
 
 def distance_apart(robot1, robot2):
-    return math.sqrt( (robot1.pos[0] - robot2.pos[0])**2 + (robot1.pos[1] - robot2.pos[1])**2 )
+    return np.sqrt( (robot1.pos[0] - robot2.pos[0])**2 + (robot1.pos[1] - robot2.pos[1])**2 )
 
 #turns both robots around 180 degrees
 def hit_so_turn180(robot1, robot2):
