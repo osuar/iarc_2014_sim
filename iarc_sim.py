@@ -22,17 +22,21 @@ import sys
 from time import sleep
 
 class Robot(object):
+    SPEED = 0.33
+
     def __init__(self, (x, y)):
         self.pos = np.array([float(x), float(y)])
         self.velocity = np.random.rand(2) - 0.5
 
         # Normalize robot velocity to 0.33 m/s
-        self.velocity = self.velocity / np.linalg.norm(self.velocity) / 3
+        self.velocity = self.velocity / np.linalg.norm(self.velocity) * self.SPEED
 
     def update(self, tick_length):
         self.pos += self.velocity * tick_length
 
 class Copter(Robot):
+    SPEED = 1.0
+
     def pick_target(self, robots):
         #if robot is not headed toward green, then it is a possible target
         possible_targets = []
@@ -52,24 +56,23 @@ class Copter(Robot):
                         self.target = robot
 
     def update(self, tick_length):
-        #change velocity to be in direction of target, but have the same magnitude (speed)
-        direction = [self.target.pos[0] - self.pos[0], self.target.pos[1] - self.pos[1]]
-        dir_mag = math.sqrt(direction[0]**2 + direction[1]**2)
-        self.velocity[0] = direction[0] / dir_mag
-        self.velocity[1] = direction[1] / dir_mag
+        # Change velocity to be in direction of target, but have the same magnitude (speed)
+        direction = self.target.pos - self.pos
+        self.velocity = direction / np.linalg.norm(direction) * np.linalg.norm(self.velocity)
 
         super(Copter, self).update(tick_length)
 
 class Avoid(Robot):
-    #avoid robots move in a circle
+    SPEED = 0.33
+
+    # Avoid robots move in a circle
     def update(self, tick_length):
-        #rotate by rot degrees
+        # Rotate by rot degrees
         rot = math.pi / 720.0
-        #rotate velocity vectors
-        vx = self.velocity[0]
-        vy = self.velocity[1]
-        self.velocity[0] = vx * math.cos(rot) - vy * math.sin(rot)
-        self.velocity[1] = vx * math.sin(rot) + vy * math.cos(rot)
+
+        # Rotate velocity vectors
+        self.velocity[0] = self.velocity[0] * np.cos(rot) - self.velocity[1] * np.sin(rot)
+        self.velocity[1] = self.velocity[0] * np.sin(rot) + self.velocity[1] * np.cos(rot)
 
         super(Avoid, self).update(tick_length)
 
