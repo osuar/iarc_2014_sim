@@ -34,28 +34,28 @@ class Robot(object):
 
 class Copter(Robot):
     def pick_target(self, robots):
-	#if robot is not headed toward green, then it is a possible target
-	possible_targets = []
-	for robot in robots:
-	    if not is_toward_green(robot):
-		possible_targets.append(robot)
-	#if all good, then robot return to center
-	if possible_targets == []:
+        #if robot is not headed toward green, then it is a possible target
+        possible_targets = []
+        for robot in robots:
+            if not is_toward_green(robot):
+                possible_targets.append(robot)
+        #if all good, then robot return to center
+        if possible_targets == []:
             self.target = Robot((10,10))
-	    return
-	self.target = possible_targets[0]
-	for robot in possible_targets:
-	    #chose target closest to red line
-	    if robot.pos[1] > self.target.pos[1]:
-		if robot.velocity[1] > 0:
-               	    self.target = robot
+            return
+        self.target = possible_targets[0]
+        for robot in possible_targets:
+            #chose target closest to red line
+            if robot.pos[1] > self.target.pos[1]:
+                if robot.velocity[1] > 0:
+                    self.target = robot
 
     def update(self, tick_length):
-	#change velocity to be in direction of target, but have the same magnitude (speed)
-	direction = [self.target.pos[0] - self.pos[0], self.target.pos[1] - self.pos[1]]
-	dir_mag = math.sqrt(direction[0]**2 + direction[1]**2)
-	self.velocity[0] = direction[0] / dir_mag
-	self.velocity[1] = direction[1] / dir_mag
+        #change velocity to be in direction of target, but have the same magnitude (speed)
+        direction = [self.target.pos[0] - self.pos[0], self.target.pos[1] - self.pos[1]]
+        dir_mag = math.sqrt(direction[0]**2 + direction[1]**2)
+        self.velocity[0] = direction[0] / dir_mag
+        self.velocity[1] = direction[1] / dir_mag
 
         super(Copter, self).update(tick_length)
 
@@ -66,9 +66,9 @@ class Avoid(Robot):
         rot = math.pi / 720.0
         #rotate velocity vectors
         vx = self.velocity[0]
-	vy = self.velocity[1]
-	self.velocity[0] = vx * math.cos(rot) - vy * math.sin(rot)
-	self.velocity[1] = vx * math.sin(rot) + vy * math.cos(rot)
+        vy = self.velocity[1]
+        self.velocity[0] = vx * math.cos(rot) - vy * math.sin(rot)
+        self.velocity[1] = vx * math.sin(rot) + vy * math.cos(rot)
 
         super(Avoid, self).update(tick_length)
 
@@ -77,14 +77,14 @@ def m_to_px(meters):
 
 def is_toward_green(robot):
     if robot.velocity[1] > 0:
-	return False
+        return False
     # y=mx+b
     m = 0.0 - robot.velocity[1] / robot.velocity[0]
     b = 0.0 - robot.pos[1] - (m * robot.pos[0])
     x_intercept = 0.0 - b / m
     #if 0 < x-intercept < 20 then it is headed toward green
     if x_intercept > 0 and x_intercept < 20:
-	return True
+        return True
     return False
 
 def draw_arena_boundary(screen, color, (sx, sy), (fx, fy)):
@@ -117,21 +117,21 @@ def turn_toward_green(robot):
 
 def robot_is_hit(copter, robot):
     if(abs(copter.pos[0] - robot.pos[0]) < .1 and abs(copter.pos[1] - robot.pos[1]) < .1):
-	return True
+        return True
     else:
-	 return False
+        return False
 
 def robot_is_out(robot, score):
     if robot.pos[1] < 0:
-	score[0] += 1
-	print(score[0])
-	return True
+        score[0] += 1
+        print(score[0])
+        return True
     if robot.pos[0] < 0 or robot.pos[0] > 20:
-	return True
+        return True
     if robot.pos[1] > 20:
-	score[0] -= 1
-	print(score[0])
-	return True 
+        score[0] -= 1
+        print(score[0])
+        return True
     return False
 
 def distance_apart(robot1, robot2):
@@ -149,10 +149,10 @@ def hit_so_turn180(robot1, robot2):
 #checks if any of the robots have colided
 def check_hit(robots):
     for robot1 in robots:
-	for robot2 in robots:
-	    if robot1 != robot2:
-		if distance_apart(robot1, robot2) < (2.0 * .33):
-		    hit_so_turn180(robot1, robot2)
+        for robot2 in robots:
+            if robot1 != robot2:
+                if distance_apart(robot1, robot2) < (2.0 * .33):
+                    hit_so_turn180(robot1, robot2)
 
 def game_over():
     print("GAME OVER MAN!!!")
@@ -162,13 +162,13 @@ def game_over():
 def check_hit_avoids(frank, robots, avoids):
     for robot in robots:
         for avoid in avoids:
-	    if distance_apart(robot, avoid) < (2.0 * .33):
-	        hit_so_turn180(avoid, robot)
+            if distance_apart(robot, avoid) < (2.0 * .33):
+                hit_so_turn180(avoid, robot)
 
     for avoid in avoids:
         if distance_apart(avoid, frank) < (2.0 * .33):
-	    print("frank hit an avoid")
-	    game_over()
+            print("frank hit an avoid")
+            game_over()
 
 pygame.init()
 screen = pygame.display.set_mode((m_to_px(20) + 5, m_to_px(20) + 5))
@@ -205,25 +205,25 @@ while len(robots) > 0:
 
         px, py = m_to_px(robot.pos[0]), m_to_px(robot.pos[1])
         draw_robot(screen, (0, 0, 255), (px, py))
-	if robot_is_out(robot, score):
-	    robots.remove(robot)
+        if robot_is_out(robot, score):
+            robots.remove(robot)
 
     #DRAW FRANK - CHANGED FOR TESTING; SHOULD BE 1.0
     frank.update(2.0 / 60.0)
-    draw_robot(screen, (255, 255, 255), (m_to_px(frank.pos[0]), m_to_px(frank.pos[1])))   
-    
+    draw_robot(screen, (255, 255, 255), (m_to_px(frank.pos[0]), m_to_px(frank.pos[1])))
+
     #DRAW AVOID
     for avoid in avoids:
         avoid.update(1.0 / 60.0)
-	px, py = m_to_px(avoid.pos[0]), m_to_px(avoid.pos[1])
-	draw_robot(screen, (255, 0, 0), (px, py))
-    
+        px, py = m_to_px(avoid.pos[0]), m_to_px(avoid.pos[1])
+        draw_robot(screen, (255, 0, 0), (px, py))
+
 
     if robot_is_hit(frank, frank.target):
-    	turn_toward_green(frank.target)
+        turn_toward_green(frank.target)
 
     frank.pick_target(robots)
-	
+
 
     pygame.display.flip()
 
