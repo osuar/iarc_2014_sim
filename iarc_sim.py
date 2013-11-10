@@ -24,13 +24,10 @@ from time import sleep
 class Robot:
     def __init__(self, (x, y)):
         self.pos = np.array([float(x), float(y)])
-
         self.velocity = np.random.rand(2) - 0.5
-        #robots always travel at 0.33 m/s
-	vmag = math.sqrt(self.velocity[0]**2 + self.velocity[1]**2)
-	self.velocity[0] = .33 * self.velocity[0] / vmag
-	self.velocity[1] = .33 * self.velocity[1] / vmag
-        # self.velocity = np.linalg.norm(self.velocity)
+
+        # Normalize robot velocity to 0.33 m/s
+        self.velocity = self.velocity / np.linalg.norm(self.velocity) / 3
 
     def update(self, tick_length):
         self.pos += self.velocity * tick_length
