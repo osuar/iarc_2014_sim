@@ -159,7 +159,7 @@ def check_hit(robots):
 
 def game_over():
     print("GAME OVER MAN!!!")
-    sys.exit()
+    pygame.event.post(pygame.event.Event(pygame.QUIT, {}))
 
 #checks if robots hit an avoids or if frank hits an avoids
 def check_hit_avoids(frank, robots, avoids):
@@ -194,6 +194,11 @@ frank.pick_target(robots)
 clock = pygame.time.Clock()
 while len(robots) > 0:
     clock.tick(60)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
     # TODO: blit background
     screen.fill((0, 0, 0))
 
