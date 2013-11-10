@@ -21,7 +21,7 @@ import math
 import sys
 from time import sleep
 
-class Robot:
+class Robot(object):
     def __init__(self, (x, y)):
         self.pos = np.array([float(x), float(y)])
         self.velocity = np.random.rand(2) - 0.5
@@ -32,7 +32,7 @@ class Robot:
     def update(self, tick_length):
         self.pos += self.velocity * tick_length
 
-class Copter (Robot):
+class Copter(Robot):
     def pick_target(self, robots):
 	#if robot is not headed toward green, then it is a possible target
 	possible_targets = []
@@ -56,10 +56,10 @@ class Copter (Robot):
 	dir_mag = math.sqrt(direction[0]**2 + direction[1]**2)
 	self.velocity[0] = direction[0] / dir_mag
 	self.velocity[1] = direction[1] / dir_mag
-	#move
-	self.pos += self.velocity * tick_length
 
-class Avoid (Robot):
+        super(Copter, self).update(tick_length)
+
+class Avoid(Robot):
     #avoid robots move in a circle
     def update(self, tick_length):
         #rotate by rot degrees
@@ -69,8 +69,8 @@ class Avoid (Robot):
 	vy = self.velocity[1]
 	self.velocity[0] = vx * math.cos(rot) - vy * math.sin(rot)
 	self.velocity[1] = vx * math.sin(rot) + vy * math.cos(rot)
-	#move
-        self.pos += self.velocity * tick_length
+
+        super(Avoid, self).update(tick_length)
 
 def m_to_px(meters):
     return int(round(meters * 20))
