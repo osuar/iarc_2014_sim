@@ -39,16 +39,17 @@ class Copter(Robot):
         for robot in robots:
             if not is_toward_green(robot):
                 possible_targets.append(robot)
+
         #if all good, then robot return to center
         if possible_targets == []:
             self.target = Robot((10,10))
-            return
-        self.target = possible_targets[0]
-        for robot in possible_targets:
-            #chose target closest to red line
-            if robot.pos[1] > self.target.pos[1]:
-                if robot.velocity[1] > 0:
-                    self.target = robot
+        else:
+            self.target = possible_targets[0]
+            for robot in possible_targets:
+                #chose target closest to red line
+                if robot.pos[1] > self.target.pos[1]:
+                    if robot.velocity[1] > 0:
+                        self.target = robot
 
     def update(self, tick_length):
         #change velocity to be in direction of target, but have the same magnitude (speed)
